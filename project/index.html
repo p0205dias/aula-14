@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consumo de API com Fetch</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+
+    .user {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin: 10px 0;
+      width: 300px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="number"] {
+      padding: 8px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #user-list {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    #error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lista de Usuários</h1>
+  <div id="user-list"></div>
+
+  <div id="user-details"></div>
+  <div id="error"></div>
+
+  <script>
+    // URL da API
+    const API_URL = 'http://localhost:3000';
+
+    // Função para buscar todos os usuários
+    async function fetchUsers() {
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error('Erro ao buscar usuários');
+        const users = await response.json();
+        displayUsers(users);
+      } catch (error) {
+        document.getElementById('error').textContent = error.message;
+      }
+    }
+
+    // Função para exibir todos os usuários
+    function displayUsers(users) {
+      const userList = document.getElementById('user-list');
+      userList.innerHTML = ''; // Limpar a lista antes de renderizar
+      users.forEach(user => {
+        const userDiv = document.createElement('div');
+        userDiv.className = 'user';
+        userDiv.innerHTML = `
+          <h3>${user.name}</h3>
+          <p>Email: ${user.email}</p>
+          <p>Celular: ${user.cellphone}</p>
+        `;
+        userList.appendChild(userDiv);
+      });
+    }
+
+    // Função para exibir os detalhes de um usuário específico
+    function displayUserDetails(user) {
+      const userDetails = document.getElementById('user-details');
+      userDetails.innerHTML = `
+        <div class="user">
+          <h3>${user.name}</h3>
+          <p>Email: ${user.email}</p>
+          <p>Celular: ${user.cellphone}</p>
+        </div>
+      `;
+    }
+
+    // Chamar a função para buscar todos os usuários ao carregar a página
+    fetchUsers();
+  </script>
+</body>
+</html>
